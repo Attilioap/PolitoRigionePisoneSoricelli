@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CodeKataBattle - Tournament Managment</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/tournament_managment.css' %}">
+    </head>
+<body>
+
+<div class="dashboard-container">
+    <h2>Welcome, {{ user.username }}!</h2>
+    
+        
+    <h3>Create a New Battle</h3>
+    <form class="create-battle-form" action="{% url 'tournament_managment' tournament_id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="tournament_id" value="{{ tournament_id }}">
+        
+        <label for="battle_name">Battle Name:</label>
+        <input type="text" id="battle_name" name="battle_name" required>
+
+        <label for="max_students_for_team">Max Students for Team:</label>
+        <input type="number" id="max_students_for_team" name="max_students_for_team" required>
+
+        <label for="registration_deadline">Registration Deadline:</label>
+        <input type="date" id="registration_deadline" name="registration_deadline" required>
+
+        <label for="submission_deadline">Submission Deadline:</label>
+        <input type="date" id="submission_deadline" name="submission_deadline" required>
+
+        <label for="code_kata">Code Kata:</label>
+        <input type="file" id="code_kata" name="code_kata" required>
+
+        <button type="submit">Create Battle</button>
+    </form>
+</div>
+
+<div class="separator"></div>
+
+    <div class="separator"></div>
+
+    <!-- Permission Grant Section -->
+    <div class="grant-permission-section">
+        <h3>Grant Management Permissions</h3>
+        <form action="{% url 'tournament_managment' tournament_id %}" method="post">
+            {% csrf_token %}
+            <label for="username">Educator Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <input type="hidden" name="tournament_id" value="{{ tournament_id }}">
+
+            <button type="submit">Grant Permission</button>
+        </form>
+    </div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    <!-- Other content goes here -->
+
+</div>
+
+</body>
+</html>

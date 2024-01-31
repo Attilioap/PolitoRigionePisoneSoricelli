@@ -1,0 +1,138 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+}
+
+h2 {
+    color: #007bff;
+    text-align: center;
+}
+
+h3 {
+    color: #333333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.tournament-list {
+    margin-top: 20px;
+}
+
+.tournament-item {
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    transition: transform 0.3s ease-in-out;
+}
+
+.tournament-item:hover {
+    transform: scale(1.02);
+}
+
+.tournament-details {
+    flex: 1;
+}
+
+.tournament-name {
+    font-size: 18px;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+.tournament-status {
+    color: #777777;
+}
+
+.manage-button, .evaluate-button, .view-status-button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out;
+    margin-right: 3px;
+}
+
+.manage-button:hover, .evaluate-button:hover, .view-status-button:hover {
+    background-color: #0056b3;
+}
+
+.separator {
+    margin: 20px 0;
+    border-top: 1px solid #dddddd;
+}
+
+.create-tournament-section {
+    margin-top: 20px;
+}
+
+.create-tournament-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-tournament-form label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+.create-tournament-form input, .create-tournament-form textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.create-tournament-form button {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: auto;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.create-tournament-form button:hover {
+    background-color: #218838;
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.messages li {
+    font-size: 14px;
+    color: #dc3545;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CodeKataBattle - Battle Status Page</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/battle_status_page.css' %}">
+    </head>
+<body class="page-container">
+
+    <div class="header-container">
+        <h2 class="tournament-title">Battle: {{ battle.name }}</h2>
+    </div>
+
+    <div class="content-container">
+
+        <!-- Team Leaderboard Section -->
+        <section class="team-leaderboard-section">
+            <h3 class="section-title">Team Leaderboard</h3>
+            <!-- Display team leaderboard information -->
+            <ul class="team-leaderboard-list">
+                {% for team in team_leaderboard %}
+                    <li class="team-leaderboard-item">
+                        Team: {{ team.team.name }} | Score: {{ team.score }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Student Leaderboard Section -->
+        <section class="student-leaderboard-section">
+            <h3 class="section-title">Student Leaderboard</h3>
+            <ul class="student-leaderboard-list">
+                {% for student_entry in student_data %}
+                    <li class="student-leaderboard-item">
+                        Student: {{ student_entry.username }} | Score: {{ student_entry.score }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Evaluate Students' Work Section -->
+        {% if show_evaluate_section %}
+            <section class="evaluate-section">
+                <h3 class="section-title">Evaluate Students' Work</h3>
+                <form method="post" action="{% url 'battle_status_page' battle.id %}" class="form-container">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" name="evaluate_students_work" class="evaluate-btn">Submit Evaluation</button>
+                </form>
+            </section>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
