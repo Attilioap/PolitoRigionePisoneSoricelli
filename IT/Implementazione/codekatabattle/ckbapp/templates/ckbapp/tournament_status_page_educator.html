@@ -14,7 +14,8 @@
     </div>
 
     <div class="content-container">
-
+        <div class="separator"></div>
+        {% if show_parameters %}
         <section class="battles-section">
             <h3 class="section-title">Ongoing Battles</h3>
             <ul class="battles-list">
@@ -26,7 +27,8 @@
                 {% endfor %}
             </ul>
         </section>
-        
+        {% endif %}
+        <div class="separator"></div>
         <!-- Inside the ended battles section -->
         <section class="ended-battles-section">
             <h3 class="section-title">Ended Battles</h3>
@@ -42,7 +44,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Inside the leaderboard-section -->
         <section class="leaderboard-section">
             <h3 class="section-title">Tournament Leaderboard</h3>
@@ -55,12 +57,15 @@
                 {% endfor %}
             </ul>
         </section>
-
+        
+        {% if show_parameters %}
+        <div class="separator"></div>
         <form method="post" action="{% url 'tournament_status_page_educator' tournament.id %}" class="form-container">
             {% csrf_token %}
             <button type="submit" name="close_tournament" class="close-tournament-btn">Close Tournament</button>
         </form>
-
+        {% endif %}
+        <a href="{% url 'educator_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
     </div>
 
 </body>

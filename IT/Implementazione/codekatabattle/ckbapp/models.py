@@ -31,6 +31,11 @@ class TeamLeaderboard(models.Model):
     battle = models.ForeignKey('Battle', on_delete=models.CASCADE, related_name='team_leaderboard')
     # Add any additional fields specific to team leaderboard
 
+class Repository(models.Model):
+    battle = models.ForeignKey('Battle', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    link = models.CharField(max_length=255)
+
 class Battle(models.Model):
     name = models.CharField(max_length=255)
     maxStudentsForTeam = models.IntegerField()
@@ -40,6 +45,11 @@ class Battle(models.Model):
     teams = models.ManyToManyField('Team', related_name='battles_participated')
     creator = models.ForeignKey(Educator, on_delete=models.CASCADE, related_name='battle_created', default=None)
     codeKata = models.FileField(upload_to='code_katas/', blank=False, null=False)
+    has_started = models.BooleanField(default=False)
+    evaluated = models.BooleanField(default=False)
+    security = models.BooleanField(default=False)
+    reliability = models.BooleanField(default=False)
+    maintainability = models.BooleanField(default=False)
 
 class Team(models.Model):
     name = models.CharField(max_length=255)

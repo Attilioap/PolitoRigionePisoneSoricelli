@@ -12,6 +12,15 @@
     <h2>Sign Up for CodeKataBattle</h2>
     <p id="signup-message">Join our platform to improve your software development skills.</p>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    
     <form class="signup-form" action="{% url 'signup' %}" method="post">
         {% csrf_token %}
         

@@ -1,0 +1,26 @@
+<!-- templates/ckbapp/tournament_info.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tournament.name }} - Tournament Information</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'ckbapp/css/tournament_info.css' %}">
+    <!-- Add any additional styles or scripts if needed -->
+</head>
+<body>
+
+<div class="tournament-info-container">
+    <h2>{{ tournament.name }}</h2>
+    <p><strong>Starting Date:</strong> {{ tournament.registrationDeadline }}</p>
+    <p><strong>Ending Date:</strong> {{ tournament.endingDate }}</p>
+    <p><strong>Description:</strong> {{ tournament.description }}</p>
+
+    <!-- Add any additional information you want to display -->
+
+    <a href="{% url 'student_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

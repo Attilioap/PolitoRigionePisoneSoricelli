@@ -1,7 +1,7 @@
 # ckbapp/admin.py
 
 from django.contrib import admin
-from .models import Student, Educator, Team, Tournament, Battle, BattleLeaderboard, TournamentLeaderboard, TeamLeaderboard, Invite
+from .models import Student, Educator, Team, Tournament, Battle, BattleLeaderboard, TournamentLeaderboard, TeamLeaderboard, Invite, Repository
 from django.contrib.auth.models import Group
 
 from .forms import TournamentAdminForm
@@ -16,7 +16,7 @@ student_group, created = Group.objects.get_or_create(name='Students')
 admin.site.register(Student)
 admin.site.register(Educator)
 admin.site.register(Team)
-
+admin.site.register(Repository)
 admin.site.register(Battle)
 admin.site.register(Invite)
 admin.site.register(BattleLeaderboard)

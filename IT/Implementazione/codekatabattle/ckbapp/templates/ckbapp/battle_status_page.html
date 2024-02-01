@@ -14,7 +14,7 @@
     </div>
 
     <div class="content-container">
-
+        <div class="separator"></div>
         <!-- Team Leaderboard Section -->
         <section class="team-leaderboard-section">
             <h3 class="section-title">Team Leaderboard</h3>
@@ -27,7 +27,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Student Leaderboard Section -->
         <section class="student-leaderboard-section">
             <h3 class="section-title">Student Leaderboard</h3>
@@ -39,7 +39,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Evaluate Students' Work Section -->
         {% if show_evaluate_section %}
             <section class="evaluate-section">
@@ -51,7 +51,7 @@
                 </form>
             </section>
         {% endif %}
-
+        <a href="{% url 'tournament_status_page_educator' battle.tournament_id %}" class="back-to-dashboard-link">Back to Tournament Page</a>
     </div>
 
 </body>

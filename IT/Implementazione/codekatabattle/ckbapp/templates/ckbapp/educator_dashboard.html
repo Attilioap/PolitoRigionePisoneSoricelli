@@ -37,7 +37,7 @@
                     <div class="tournament-name">{{ pt.name }}</div>
                     <div class="tournament-status">Status: Completed</div>
                 </div>
-                <button class="view-status-button">View Tournament Status</button>
+                <a href="{% url 'tournament_status_page_educator' pt.id %}" class="view-status-button">View Tournament Status</a>
                 
             </div>
         {% endfor %}
@@ -75,6 +75,14 @@
     </div>
 
     <div class="separator"></div>
+
+    <div class="logout-button">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
 
 </div>
 

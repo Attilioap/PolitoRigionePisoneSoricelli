@@ -42,7 +42,7 @@
                     <input type="hidden" name="enroll_tournament_id" value="{{ tournament.id }}">
                     <button type="submit" class="enroll-button">Enroll in Tournament</button>
                 </form>
-                <a href="{% url 'student_dash' %}" class="view-info-link">View Tournament Information</a>
+                <a href="{% url 'tournament_info' tournament.id %}" class="view-info-link">View Tournament Information</a>
             </div>
         {% endfor %}
     </div>

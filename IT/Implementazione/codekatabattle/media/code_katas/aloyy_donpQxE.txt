@@ -1,0 +1,230 @@
+open util/integer
+
+sig Student{
+recives: set Notification,
+participates: set Tournament
+}
+
+sig Educator{
+recives: set Notification,
+manages: set Tournament,
+creates: set Badge,
+makes: set ManualEvaluation
+}
+
+sig Tournament{
+has: one StudentTournamentLeaderboard,
+}
+
+
+//tournament gestito da almeno un educatore ok
+
+sig StudentTournamentLeaderboard{
+referres_to: set Student
+}
+
+//StudentTournamentLeaderboard relativa ad un unico torneo ok
+
+sig Battle{
+maxStudentsForTeam: Int,
+has1: one StudentBattleLeaderboard,
+has2: one TeamBattleLeaderboard,
+managed_by: one Educator
+}
+
+//un CodeKata per battaglia ok
+//0< num teammates <= max studentsforteam ok
+
+sig CodeKata{
+relative_to: one Battle,
+includes: one SoftwareProject
+}
+
+sig SoftwareProject{
+}
+
+//è incluso in un codekata ok
+//ha almeno un test case ok
+
+sig TestCase{
+belongs_to: one SoftwareProject
+}
+
+sig StudentBattleLeaderboard{
+referres_to: set Student
+}
+
+//Leaderboard relativa ad un unica battaglia ok
+
+sig TeamBattleLeaderboard{
+referres_to: set Team
+}
+
+//tLeaderboard relativa ad un unica battaglia ok
+
+sig Team{
+numTeammates: Int,
+takes_part: one Battle,
+made_by: some Student
+}
+
+//un team ha almeno uno studente ok
+//il team ha uno score ad esso relativo ok
+//ha una team leaderboard associata ok
+
+sig Score{
+fullAssessment: Int,
+relative_to: one Team,
+made_by: some Student
+}
+
+//score= manual+automatic AAAAAAAAAAAAAAAA
+//0 o 1 manual evaluation aaaaaaaaaaaaaaa ok
+
+
+sig ManualEvaluation{
+partialScore: Int,
+contributes_to: one Score
+}
+
+sig AutomaticEvaluation{
+partialScore: Int,
+contributes_to: one Score
+}
+
+//fatta da un automatic evaluation tool ok
+
+sig AutomaticEvaluationTool{
+makes: set AutomaticEvaluation
+}
+
+sig Badge{
+assigned_to: set Student,
+relative_to: one Tournament
+}
+
+//creato da un educator ok
+
+sig Notification{}
+
+//ricevuta da almeno uno studente ok
+
+//tournament gestito da almeno un educatore ok
+fact TournamentManagedByEducator {
+  all t: Tournament | some e: Educator | e.manages = t
+}
+
+//StudentTournamentLeaderboard relativa ad un unico torneo ok
+fact StudentTournamentLeaderboardForUniqueTournament {
+  all stlb: StudentTournamentLeaderboard |
+    one t: Tournament | t.has = stlb
+}
+
+
+//un CodeKata per battaglia ok
+fact UniqueCodeKataPerBattle {
+  all b: Battle | one ck: CodeKata | ck.relative_to = b
+}
+
+//0< num teammates <= max studentsforteam ok
+
+fact NumTeammatesInRange {
+  all t: Team |
+    t.numTeammates > 0 && t.numTeammates <= t.takes_part.maxStudentsForTeam
+}
+
+//è incluso in un codekata ok
+fact UniqueSoftwareProjectInCodeKata {
+  all sp: SoftwareProject | one ck: CodeKata | ck.includes = sp
+}
+
+//ha almeno un test case ok
+fact SoftwareProjectHasAtLeastOneTestCase {
+  all sp: SoftwareProject | some tc: TestCase | tc.belongs_to = sp
+}
+
+
+//Leaderboard relativa ad un unica battaglia ok
+fact UniqueStudentBattleLeaderboardForBattle {
+  all sbl: StudentBattleLeaderboard | one b: Battle | b.has1 = sbl
+}
+
+//tLeaderboard relativa ad un unica battaglia ok
+fact UniqueTeamBattleLeaderboardForBattle {
+  all tbl: TeamBattleLeaderboard | one b: Battle | b.has2 = tbl
+}
+
+/*
+//il team ha uno score ad esso relativo ok
+fact UniqueScoreForTeam {
+  all t: Team | one s: Score | s.relative_to=t
+}*/
+
+//ha una team leaderboard associata ok
+fact TeamInUniqueTeamBattleLeaderboard {
+  all t: Team |
+    one tbl: TeamBattleLeaderboard | tbl.referres_to = t
+}
+
+fact PositiveMaxStudentsForTeam{
+	all b: Battle | b.maxStudentsForTeam > 0 
+}
+
+
+//score= manual+automatic AAAAAAAAAAAAAAAA
+//una automatic evaluation per score
+fact OneAutomaticEvaluationForScore{
+	all s: Score | one ae: AutomaticEvaluation | ae.contributes_to=s
+}
+
+fact FullAssessmentEqualsPartialScores {
+  all s: Score | one me: ManualEvaluation | one ae: AutomaticEvaluation | 
+	s.fullAssessment= me.partialScore + ae.partialScore
+}
+
+
+//0 o 1 manual evaluation aaaaaaaaaaaaaaa ok
+fact ScoreContributedByAtMostOneManualEvaluation {
+  all s: Score |
+    lone me: ManualEvaluation | me.contributes_to = s
+}
+
+
+//fatta da un automatic evaluation tool ok
+fact AutomaticEvaluationMadeByOneTool {
+  all ae: AutomaticEvaluation |
+    one aet: AutomaticEvaluationTool | aet.makes = ae
+}
+
+//creato da un educator ok
+fact BadgeCreatedByOneEducator {
+  all b: Badge |
+    one e: Educator | e.creates = b
+}
+
+//ricevuta da almeno uno studente ok
+fact NotificationReceivedByAtLeastOne {
+  all n: Notification |
+    some s: Student | s.recives = n
+    or some e: Educator | e.recives = n
+}
+
+fact NumTeammatesEqualsMadeBy {
+  all t: Team |
+    t.numTeammates = #(t.made_by)
+}
+
+
+
+pred createScenario{
+	#Educator=2
+	#Student=5
+	#Tournament=1
+	#Battle=3
+	#AutomaticEvaluationTool=1	
+	#CodeKata=3
+	#TestCase=4
+	#Team=1
+}
+
+run createScenario for 5

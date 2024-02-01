@@ -11,6 +11,14 @@
 <div class="login-container">
     <h2>Log In to CodeKataBattle</h2>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <form class="login-form" action="{% url 'login' %}" method="post">
         {% csrf_token %}
 
@@ -28,6 +36,8 @@
             <button type="submit">Log In</button>
         </div>
     </form>
+
+    
 
     <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
 </div>

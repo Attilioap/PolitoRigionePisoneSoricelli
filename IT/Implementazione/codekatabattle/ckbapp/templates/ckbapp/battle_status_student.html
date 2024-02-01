@@ -26,7 +26,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Team Leaderboard Section -->
         <section class="team-leaderboard-section">
             <h3 class="section-title">Team Leaderboard</h3>
@@ -39,7 +39,7 @@
             </ul>
         </section>
 
-        
+        <div class="separator"></div>
 
         <!-- Invite a Teammate Section -->
         <section class="invite-teammate-section">
@@ -52,7 +52,7 @@
                 <button type="submit" name="invite_teammate" class="invite-btn">Send Invitation</button>
             </form>
         </section>
-
+        <div class="separator"></div>
          <!-- Display messages -->
          {% if messages %}
          <ul class="messages">
@@ -61,8 +61,19 @@
              {% endfor %}
          </ul>
         {% endif %}
-
-
+        <div class="separator"></div>
+        <!-- Repositories Section -->
+        <section class="repositories-section">
+            <h3 class="section-title">Repository</h3>
+            <ul class="repositories-list">
+                {% for repo in repositories %}
+                    <li class="repositories-item">
+                        Battle: {{ repo.battle.name }} | Link: <a href="{{ repo.link }}" target="_blank">{{ repo.link }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <a href="{% url 'tournament_status_page_student' battle.tournament_id %}" class="back-to-dashboard-link">Back to Tournament Page</a>
         </div>
 
 </body>

@@ -25,7 +25,7 @@
             {% endfor %}
         </div>
         {% endif %}
-        
+        <div class="separator"></div>
         <!-- Enrolled Battles Section -->
         <section class="enrolled-battles-section">
             <h3 class="section-title">Enrolled Battles</h3>
@@ -38,7 +38,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Upcoming Battles Section -->
         <section class="upcoming-battles-section">
             <h3 class="section-title">Upcoming Battles</h3>
@@ -59,7 +59,7 @@
         </section>
 
         
-
+        <div class="separator"></div>
 
         <!-- Tournament Leaderboard Section -->
         <section class="leaderboard-section">
@@ -72,7 +72,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <div class="separator"></div>
         <!-- Received Invitations Section -->
         <section class="received-invitations-section">
             <h3 class="section-title">Received Invitations</h3>
@@ -91,7 +91,7 @@
                 {% endfor %}
             </ul>
         </section>
-
+        <a href="{% url 'student_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
     </div>
 
 </body>

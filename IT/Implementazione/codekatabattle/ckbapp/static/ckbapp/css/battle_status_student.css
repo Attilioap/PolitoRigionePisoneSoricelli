@@ -149,3 +149,57 @@ body {
 .invite-btn:hover {
     background-color: #0056b3;
 }
+
+/* Add this to your existing CSS or create a new CSS file */
+
+.repositories-section {
+    margin-top: 20px;
+}
+
+.repositories-section .section-title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.repositories-list {
+    list-style: none;
+    padding: 0;
+}
+
+.repositories-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.repositories-item a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.repositories-item a:hover {
+    text-decoration: underline;
+}
+
+
+.back-to-dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-dashboard-link:hover {
+    background-color: #0056b3;
+}
+
+.separator {
+    margin: 20px 0;
+    border-top: 1px solid #dddddd;
+}
