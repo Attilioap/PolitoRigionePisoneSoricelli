@@ -1,4 +1,3 @@
-/* tournament_managment.css */
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -96,8 +95,6 @@ button:hover {
 .warning {
     background-color: #f39c12;
 }
-
-/* Add this to tournament_managment.css */
 
 .grant-permission-section {
     display: flex;

@@ -1,4 +1,3 @@
-<!-- templates/ckbapp/tournament_info.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,6 @@
     <title>{{ tournament.name }} - Tournament Information</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'ckbapp/css/tournament_info.css' %}">
-    <!-- Add any additional styles or scripts if needed -->
 </head>
 <body>
 
@@ -16,11 +14,22 @@
     <p><strong>Starting Date:</strong> {{ tournament.registrationDeadline }}</p>
     <p><strong>Ending Date:</strong> {{ tournament.endingDate }}</p>
     <p><strong>Description:</strong> {{ tournament.description }}</p>
-
-    <!-- Add any additional information you want to display -->
-
     <a href="{% url 'student_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
 </div>
+
+<div class="separator"></div>
+<!-- Inside the leaderboard-section -->
+<section class="leaderboard-section">
+    <h3 class="section-title">Tournament Leaderboard</h3>
+    <!-- Display tournament leaderboard information -->
+    <ul class="leaderboard-list">
+        {% for entry in tournament_leaderboard %}
+            <li class="leaderboard-item">
+                Student: {{ entry.student.user.username }} | Score: {{ entry.score }}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
 
 </body>
 </html>

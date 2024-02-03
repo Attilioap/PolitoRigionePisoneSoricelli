@@ -11,64 +11,112 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from create_repositories import start_all_pending_battles
-from django.http import JsonResponse
-from django.views import View
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.db import IntegrityError
+import subprocess
+from django.conf import settings
+import os
+import random
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 #lt --port 8000
+#ngrok http http://localhost:8000
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GitHubWebhookView(View):
-    def post(self, request, *args, **kwargs):
-        #payload = request.body
 
-        # Assuming you have a way to identify the battle_id from the payload
-        battle_id = 37 #self.get_battle_id_from_payload(payload)
-
-        # Update team scores for the corresponding battle
-        if battle_id:
-            self.update_team_scores(battle_id)
-
-        return JsonResponse({'status': 'success'})
-
-    def get_battle_id_from_payload(self, payload):
-        # Your logic to extract battle_id from the GitHub payload
-        # For example, if the payload is JSON, you might do something like this:
-        pass
-    
-
-    def update_team_scores(self, battle_id):
-        # Retrieve the battle
-        battle = get_object_or_404(Battle, id=battle_id)
-
-        # Iterate through teams in the battle and update scores
-        for team in battle.teams.all():
-            # Assuming you have a TeamLeaderboard entry for each team
-            team_leaderboard, created = TeamLeaderboard.objects.get_or_create(team=team, battle=battle)
+@csrf_exempt
+def github_webhook(request):
+    if request.method == 'POST':
+        try:
+            payload = json.loads(request.body.decode('utf-8'))
             
-            # Update the score to 50 (you may adjust this based on your scoring logic)
-            team_leaderboard.score = 50
-            team_leaderboard.save()
+            file_content = payload.get('file_content', '')
+            username = payload.get('user_username', '')
+            battle_name = payload.get('repository_name', '')
+            
+            battle=Battle.objects.get(name=battle_name)
+            student=Student.objects.get(user__username=username)
+            team = Team.objects.get(members=student, battle=battle)
+
+            #check the battle is not ended
+            if timezone.now().date() <= battle.submissionDeadline:
+                evaluate_team_score(team, timezone.now().date(), file_content)
+            
+            '''
+            # Optionally, we can save the pushed code to a file
+            # with open(file_path, 'w') as file:
+            #     file.write(pushed_code)
+            '''
+            return HttpResponse(status=200)
+        except json.JSONDecodeError:
+            return HttpResponse(status=400, content='Invalid JSON payload')
+
+    return HttpResponse(status=200)
+
+def evaluate_team_score(team, time, file_content):
+
+    battle = get_object_or_404(Battle, id=team.battle_id)
+    
+    # Get the base directory of the Django project
+    base_dir = settings.BASE_DIR
+
+    # Construct the file path relative to the code directory
+    file_path = os.path.join(base_dir, 'ckbapp', 'code.py')
+
+    # Write or overwrite the file
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(file_content)
 
 
-'''
-def tournament_list():
-    tournaments = Tournament.objects.all()
-    past_tournaments=[tournament for tournament in tournaments if tournament.endingDate < datetime.now().date()]
-    ongoing_tournaments=[tournament for tournament in tournaments if tournament.endingDate >= datetime.now().date()]
-    return ongoing_tournaments, past_tournaments
-    '''
-'''
-def student_tournament_list(student):
-    subscribed_tournaments = student.tournaments_subscribed.all()
-    past_tournaments = [tournament for tournament in subscribed_tournaments if tournament.endingDate < datetime.now().date()]
-    upcoming_tournaments = [tournament for tournament in subscribed_tournaments if tournament.endingDate >= datetime.now().date()]
-    return subscribed_tournaments, upcoming_tournaments, past_tournaments
-    '''
+    try:
 
 
+        # Run Flake8 using subprocess
+        result = subprocess.run(['flake8', file_path], capture_output=True, text=True)
+
+        # Check for issues reported by Flake8
+        if result.returncode == 0:
+            base_score = 100  # No issues found
+        else:
+            # Calculate a score based on the number of issues
+            total_issues = len(result.stdout.strip().split('\n'))
+            base_score = max(0, 100 - total_issues)  # Higher score for fewer issues
+
+
+    except Exception as e:
+        return HttpResponse(f"Error running Flake8: {e}", status=500)
+   
+
+    # Random number of passed test cases 
+    passed_test_cases =10 * random.randint(1, 10)
+
+    
+    # Timeliness parameter
+    timeliness_parameter = ((battle.submissionDeadline-battle.registrationDeadline)/(time-battle.registrationDeadline))*10
+    
+    # Calculate a normalized score
+    normalized_score = normalize_score(base_score, passed_test_cases, timeliness_parameter)
+ 
+    # Modify TeamLeaderboard
+    leaderboard_entry, _= TeamLeaderboard.objects.get_or_create(team=team, battle=battle)
+    leaderboard_entry.score = normalized_score
+    leaderboard_entry.save()
+
+    students = team.members.all()
+    for student in students:
+        bleaderboard_entry, _= BattleLeaderboard.objects.get_or_create(student=student, battle_id=battle)
+        bleaderboard_entry.score = normalized_score
+        bleaderboard_entry.save()
+
+def normalize_score(base_score, passed_test_cases, timeliness_parameter):
+    # Normalize the score
+    normalized_score = (base_score + passed_test_cases + timeliness_parameter) / 3
+    # Ensure the normalized score is within the valid range [0, 100]
+    normalized_score = max(0, min(100, normalized_score))
+    return normalized_score
+
+#signup view
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -128,7 +176,7 @@ def signup(request):
     return render(request, 'ckbapp/signup.html', {'form': form})
 
 
-
+#login view
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -154,7 +202,8 @@ def user_login(request):
     return render(request, 'ckbapp/login.html', {'form': form})
 
 
-
+#educator dashboard view
+@login_required
 def educator_dash(request):
     if request.method == 'POST':
         # Handle form submission
@@ -193,8 +242,8 @@ def educator_dash(request):
                 messages.error(request, "Invalid dates. Registration deadline must be after or on today, and ending date must be after today. They also cannot be the same date")
                 return redirect('educator_dash')
 
-     # Handle GET request
-    educator = request.user.educator  # Assuming the educator is logged in
+    #Handle GET request
+    educator = request.user.educator  
     ongoing_tournaments = Tournament.objects.filter(educators=educator, endingDate__gte=datetime.now().date())
     past_tournaments = Tournament.objects.filter(educators=educator, endingDate__lt=datetime.now().date())
 
@@ -204,8 +253,10 @@ def educator_dash(request):
 @login_required
 def tournament_info(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
+    #Get tournament leaderboard
+    tournament_leaderboard = TournamentLeaderboard.objects.filter(tournament=tournament).order_by('-score')
 
-    return render(request, 'ckbapp/tournament_info.html', {'tournament': tournament})
+    return render(request, 'ckbapp/tournament_info.html', {'tournament': tournament, 'tournament_leaderboard' : tournament_leaderboard})
 
 
 
@@ -252,10 +303,12 @@ def student_dash(request):
     # Get upcoming tournaments that the student is not enrolled in
     upcoming_tournaments = Tournament.objects.exclude(students=student).filter(endingDate__gte=datetime.now().date())
 
+    past_tournaments = Tournament.objects.filter(students=student, endingDate__lt=datetime.now().date())
 
-    return render(request, 'ckbapp/student_dashboard.html', {'enrolled_tournaments': enrolled_tournaments, 'upcoming_tournaments': upcoming_tournaments})
 
+    return render(request, 'ckbapp/student_dashboard.html', {'enrolled_tournaments': enrolled_tournaments, 'upcoming_tournaments': upcoming_tournaments, 'past_tournaments': past_tournaments})
 
+@login_required
 def tournament_managment(request, tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
 
@@ -292,6 +345,8 @@ def tournament_managment(request, tournament_id):
 
             try:
                 # Additional checks
+                if Battle.objects.filter(name=name).exists():
+                    raise ValueError("A Battle with the same name already exist.")
                 if int(max_students_for_team) <= 0:   
                     raise ValueError("Max Students for Team should be greater than 0.")
 
@@ -301,7 +356,8 @@ def tournament_managment(request, tournament_id):
                 if submission_deadline > tournament.endingDate:
                     raise ValueError("Submission Deadline should be on or before the Tournament's Ending Date.")
 
-                battle = Battle.objects.create(
+                #create the battle
+                Battle.objects.create(
                     name=name,
                     maxStudentsForTeam=max_students_for_team,
                     registrationDeadline=registration_deadline,
@@ -376,40 +432,25 @@ def tournament_status_page_educator(request, tournament_id):
 def battle_status_page(request, battle_id):
     battle = get_object_or_404(Battle, id=battle_id)
 
-    battle_leaderboard = BattleLeaderboard.objects.filter(battle=battle).order_by('-score')
-
-    # Retrieve TeamLeaderboard objects ordered by descending scores
-    team_leaderboard = TeamLeaderboard.objects.filter(battle=battle).order_by('-score')
-
-    # Create a list to store student usernames and their scores
-    student_data = []
-
-    # Iterate through BattleLeaderboard entries and gather student data
-    for leaderboard_entry in battle_leaderboard:
-        # Retrieve the Student object for the given student_id
-        student = Student.objects.get(pk=leaderboard_entry.student_id)
-
-        student_data.append({
-            'username': student.user.username,
-            'score': leaderboard_entry.score,
-        })
-
-
-
     show_evaluate_section = False
 
     if request.method == 'POST' and 'evaluate_students_work' in request.POST:
+           
+
+
         # Handle form submission for evaluating students' work
         form = EvaluationForm(battle, request.POST)
         
         if form.is_valid():
+            
+
             # Process the form data (update team scores, etc.)
             
             for team in battle.teams.all():
                 field_name = f'team_{team.id}_score'
                 score = form.cleaned_data.get(field_name, 0)
                 
-                # Update TeamLeaderboard or create a new model to store evaluations
+                # Update TeamLeaderboard
                 team_leaderboard_entry, created = TeamLeaderboard.objects.get_or_create(
                     team=team,
                     battle=battle,
@@ -430,6 +471,7 @@ def battle_status_page(request, battle_id):
                         student_leaderboard_entry.score = TeamLeaderboard.objects.get(team_id=team).score
                         student_leaderboard_entry.save()
 
+                    #Update tournament leaderboard
                     tournament_leaderboard_entry, created = TournamentLeaderboard.objects.get_or_create(
                         student=student,
                         tournament=battle.tournament,
@@ -438,24 +480,43 @@ def battle_status_page(request, battle_id):
                     if not created:
                         tournament_leaderboard_entry.score = tournament_leaderboard_entry.score+TeamLeaderboard.objects.get(team_id=team).score
                         tournament_leaderboard_entry.save()
-                    
-                    # Set evaluated to True
-                    battle.evaluated = True
 
+                    battle.evaluated=True
                     # Save the changes
                     battle.save()
                 
-            return redirect('battle_status_page', battle_id=battle.id)  # Redirect to the same page
+            return redirect('battle_status_page', battle_id=battle.id) 
 
     else:
         form = EvaluationForm(battle)
+
+
+    battle_leaderboard = BattleLeaderboard.objects.filter(battle=battle).order_by('-score')
+
+    # Retrieve TeamLeaderboard objects ordered by descending scores
+    team_leaderboard = TeamLeaderboard.objects.filter(battle=battle).order_by('-score')
+
+    # Create a list to store student usernames and their scores
+    student_data = []
+
+    # Iterate through BattleLeaderboard entries
+    for leaderboard_entry in battle_leaderboard:
+        # Retrieve the Student object for the given student_id
+        student = Student.objects.get(pk=leaderboard_entry.student_id)
+
+        student_data.append({
+            'username': student.user.username,
+            'score': leaderboard_entry.score,
+        })
 
     # Check if the submission deadline has passed
     if battle.submissionDeadline < date.today():
         show_evaluate_section = True
 
+    #Check the battle hasn't been already evaluated
     if battle.evaluated:
         show_evaluate_section = False
+
 
     return render(request, 'ckbapp/battle_status_page.html', {
         'battle': battle,
@@ -473,14 +534,12 @@ def tournament_status_page_student(request, tournament_id):
 
     tournament = get_object_or_404(Tournament, id=tournament_id)
 
-
-
-   # Initialize variables
+   #Initialize variables
     enrolled_battles = Battle.objects.filter(teams__members=student, tournament=tournament)
     upcoming_battles = Battle.objects.filter(tournament=tournament, registrationDeadline__gte=timezone.now().date()).exclude(teams__members=student)
     tournament_leaderboard = TournamentLeaderboard.objects.filter(tournament=tournament).order_by('-score')
 
-    # Get received invitations for the currently logged-in student
+    #Get received invitations for the currently logged-in student
     received_invitations = Invite.objects.filter(invited_student=request.user.student, is_accepted=False, battle__tournament__id=tournament.id)
 
     if request.method == 'POST':
@@ -523,7 +582,7 @@ def tournament_status_page_student(request, tournament_id):
                     battle=battle_to_join
                 )
 
-                # If the entry was created, it means it's a new team, so set the score to 0
+                #If the entry was created, it means it's a new team, so set the score to 0
                 if created:
                     battle_leaderboard.score = 0
                     battle_leaderboard.save()
@@ -534,21 +593,19 @@ def tournament_status_page_student(request, tournament_id):
 
                 messages.success(request, 'Successfully joined the battle.')
 
-                # Update the enrolled_battles list after joining a new battle
+                #Update the enrolled_battles list after joining a new battle
                 enrolled_battles = Battle.objects.filter(teams__members=student, tournament=tournament)
 
 
         elif action_type == 'invitation_response' and invitation_id:
             invitation = get_object_or_404(Invite, id=invitation_id)
 
-            print(invitation)
-
             # Check if the invitation is for the logged-in student
             if invitation.invited_student == student:
                 
                 if request.POST.get('response') == 'accept':
-                    # Check if adding the student to the team would exceed maxstudentsforteam
-                    if invitation.team.numTeammates + 1 <= invitation.battle.maxStudentsForTeam:
+                    # Check if adding the student to the team would exceed maxstudentsforteam or battle reg deadline is passed
+                    if (invitation.team.numTeammates + 1 <= invitation.battle.maxStudentsForTeam)  and (timezone.now().date() <= invitation.battle.registrationDeadline):
                         # Enroll the student in the battle in the invited team
                         invited_team = invitation.team
                         invited_team.members.add(student)
@@ -568,24 +625,23 @@ def tournament_status_page_student(request, tournament_id):
                             score = TeamLeaderboard.objects.get(team_id=invitation.team).score
                             )
                         
-                        # Get the queryset of invitations with the specified battle ID
+                        # Get invitations with the specified battle ID
                         invitations_to_delete = Invite.objects.filter(invited_student_id=invitation.invited_student, battle=invitation.battle_id)
             
-                        # Delete all invitations in the queryset
+                        # Delete all of them
                         invitations_to_delete.delete()
 
                         messages.success(request, 'Successfully accepted the team invitation.')
                     else:
-                        messages.warning(request, 'Adding the student would exceed the maximum number of students for the team.')
-                        # Get the queryset of invitations with the specified battle ID made by the full team and delete them
+                        messages.warning(request, 'The Battle has already started or adding the student would exceed the maximum number of students for the team.')
+                        # Get the invitations with the specified battle ID made by the full team and delete them
                         invitations_to_delete = Invite.objects.filter(inviting_student_id=invitation.inviting_student, battle=invitation.battle_id)
                         invitations_to_delete.delete()
 
 
                 elif request.POST.get('response') == 'decline':
-                    print("nok")
+                    
                     # Remove the invitation
-                    print(f"Invitation ID to delete: {invitation_id}")
                     invitation = get_object_or_404(Invite, id=invitation_id)
 
                     # Delete the invitation
@@ -607,16 +663,16 @@ def battle_status_student(request, battle_id):
     student_repositories = Repository.objects.filter(student=request.user.student, battle=battle_id)
 
     
-    # Retrieve BattleLeaderboard objects ordered by descending scores
+    # Retrieve BattleLeaderboard ordered by descending scores
     battle_leaderboard = BattleLeaderboard.objects.filter(battle=battle).order_by('-score')
 
-    # Retrieve TeamLeaderboard objects ordered by descending scores
+    # Retrieve TeamLeaderboard ordered by descending scores
     team_leaderboard = TeamLeaderboard.objects.filter(battle=battle).order_by('-score')
 
     # Create a list to store student usernames and their scores
     student_data = []
 
-    # Iterate through BattleLeaderboard entries and gather student data
+    # Iterate through BattleLeaderboard entries
     for leaderboard_entry in battle_leaderboard:
         # Retrieve the Student object for the given student_id
         student = Student.objects.get(pk=leaderboard_entry.student_id)
@@ -693,16 +749,3 @@ def battle_status_student(request, battle_id):
         'student_data': student_data,
         'repositories': student_repositories,
     })
-
-#{% url 'tournament_info' tournament.id %}
-
-#"{% url 'battle_status_page' battle.id %}"
-
-#"{% url 'evaluate_students_work' battle.id %}"
-
-#"{% url 'check_battle_status' battle.id %}"
-
-#"{% url 'respond_to_invitation' invitation.id %}
-
-#(0.000) INSERT INTO "ckbapp_invite" ("inviting_student_id", "invited_student_id", "team_id", "battle_id", "is_accepted")
-# VALUES (24, 27, 49, 33, 0) RETURNING "ckbapp_invite"."id"; args=(24, 27, 49, 33, False); alias=default

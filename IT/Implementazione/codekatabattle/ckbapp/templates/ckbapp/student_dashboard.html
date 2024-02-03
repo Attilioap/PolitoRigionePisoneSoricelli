@@ -1,4 +1,4 @@
-<!-- student_dashboard.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +47,19 @@
         {% endfor %}
     </div>
 
-    <!-- Other content goes here -->
+    <h3>Past Tournaments</h3>
+    <div class="tournament-list">
+        {% for tournament in past_tournaments %}
+            <div class="tournament-item">
+                <div class="tournament-details">
+                    <div class="tournament-name">{{ tournament.name }}</div>
+                    <div class="tournament-status">Status: Upcoming</div>
+                </div>
+                <a href="{% url 'tournament_info' tournament.id %}" class="view-info-link">View Tournament Information</a>
+            </div>
+        {% endfor %}
+    </div>
+
     <div class="logout-button">
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}

@@ -2,8 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from .views import educator_dash, signup, user_login, student_dash, tournament_managment, tournament_status_page_educator, battle_status_page, tournament_status_page_student, battle_status_student, tournament_info
-from ckbapp.views import GitHubWebhookView
+from .views import educator_dash, signup, user_login, student_dash, tournament_managment, tournament_status_page_educator, battle_status_page, tournament_status_page_student, battle_status_student, tournament_info, github_webhook
+
 
 urlpatterns = [
     path('educator_dashboard/', educator_dash, name='educator_dash'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('tournament/<int:tournament_id>/info/', tournament_info, name='tournament_info'),
 
     # Add the GitHub webhook URL
-    path('webhook/github/', GitHubWebhookView.as_view(), name='github_webhook'),
+    path('github_webhook/', github_webhook, name='github_webhook'),
 ]
 
 

@@ -16,18 +16,12 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-2nk7%ls8p+jce$_=2#jjt&z2ayeugt=n^3u-pg+3n)61d^rsuu'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*' ]
 
 # Application definition
 
@@ -118,7 +112,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -138,7 +132,7 @@ ASGI_APPLICATION = "codekatabattle.routing.application"
 
 GITHUB_ACCESS_TOKEN = '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'
 
-
+DJANGO_APP_WEBHOOK_URL = 'https://be51-158-47-247-42.ngrok-free.app/github_webhook/'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -152,3 +146,13 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+
+X_FRAME_OPTIONS = 'DENY'
+
+CSRF_TRUSTED_ORIGINS= ['https://be51-158-47-247-42.ngrok-free.app']
+
+
+'''
+STATIC_ROOT = os.path.join(BASE_DIR, '/ckbapp/static/ckbapp/css/')
+'''

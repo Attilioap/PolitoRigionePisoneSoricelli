@@ -1,7 +1,6 @@
-# forms.py
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from .models import Tournament, Battle
+from .models import Tournament
 
 class SignupForm(forms.Form):
     firstName = forms.CharField(max_length=255, required=True)

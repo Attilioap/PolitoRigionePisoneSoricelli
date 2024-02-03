@@ -147,7 +147,7 @@ h3 {
 }
 
 .logout-button button {
-    background-color: #dc3545; /* Bootstrap's danger color */
+    background-color: #dc3545; 
     color: #fff;
     padding: 8px 16px;
     border: none;

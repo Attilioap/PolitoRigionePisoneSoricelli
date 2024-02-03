@@ -1,4 +1,4 @@
-/* Reset some default styles */
+
 body, h1, h2, h3, p, ul {
     margin: 0;
     padding: 0;
@@ -98,7 +98,7 @@ body {
     border-radius: 5px;
 }
 
-/* Styles for each message tag */
+
 .success {
     color: #155724;
     background-color: #d4edda;

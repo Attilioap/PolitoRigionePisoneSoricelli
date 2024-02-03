@@ -1,4 +1,4 @@
-/* Reset some default styles */
+
 body, h1, h2, h3, p, ul {
     margin: 0;
     padding: 0;
@@ -34,7 +34,7 @@ body {
     color: #333;
 }
 
-/* Common styles for leaderboard items */
+
 .team-leaderboard-item,
 .battle-leaderboard-item,
 .student-leaderboard-item {

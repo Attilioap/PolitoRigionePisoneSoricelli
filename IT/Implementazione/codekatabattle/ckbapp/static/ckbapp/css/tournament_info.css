@@ -1,4 +1,3 @@
-/* static/ckbapp/css/tournament_info.css */
 
 body {
     font-family: 'Arial', sans-serif;
@@ -51,4 +50,23 @@ a:hover {
 .separator {
     margin: 20px 0;
     border-top: 1px solid #dddddd;
+}
+
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboard-item {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.leaderboard-item:hover {
+    transform: translateY(-5px);
 }
