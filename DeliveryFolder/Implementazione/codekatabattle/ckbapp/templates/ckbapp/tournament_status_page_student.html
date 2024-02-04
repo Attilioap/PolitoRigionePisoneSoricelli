@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKataBattle - Tournament Status Page</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/tournament_status_page_student.css' %}">
+</head>
+<body class="page-container">
+
+    <div class="header-container">
+        <h2 class="tournament-title">Tournament: {{ tournament.name }}</h2>
+    </div>
+
+    <div class="content-container">
+
+
+        {% if messages %}
+        <div id="messages">
+            {% for message in messages %}
+                <div class="{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="separator"></div>
+        <!-- Enrolled Battles Section -->
+        <section class="enrolled-battles-section">
+            <h3 class="section-title">Enrolled Battles</h3>
+            <ul class="battles-list">
+                {% for battle in enrolled_battles %}
+                    <li class="battle-item">
+                        {{ battle.name }}
+                        <a href="{% url 'battle_status_student' battle.id %}" class="check-status-btn">Check Status</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <div class="separator"></div>
+        <!-- Upcoming Battles Section -->
+        <section class="upcoming-battles-section">
+            <h3 class="section-title">Upcoming Battles</h3>
+            <ul class="battles-list">
+                {% for battle in upcoming_battles %}
+                    <li class="battle-item">
+                        {{ battle.name }}
+                        <span class="registration-deadline">Registration Deadline: {{ battle.registrationDeadline }}</span>
+                        <form method="post" action="{% url 'tournament_status_page_student' tournament.id %}" class="form-container">
+                            {% csrf_token %}
+                            <input type="hidden" name="battle_id" value="{{ battle.id }}">
+                            <input type="hidden" name="action_type" value="join_battle">
+                            <button type="submit" name="join_battle" class="join-battle-btn">Join Battle</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        
+        <div class="separator"></div>
+
+        <!-- Tournament Leaderboard Section -->
+        <section class="leaderboard-section">
+            <h3 class="section-title">Tournament Leaderboard</h3>
+            <ul class="leaderboard-list">
+                {% for entry in tournament_leaderboard %}
+                    <li class="leaderboard-item">
+                        Student: {{ entry.student.user.username }} | Score: {{ entry.score }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <div class="separator"></div>
+        <!-- Received Invitations Section -->
+        <section class="received-invitations-section">
+            <h3 class="section-title">Received Invitations</h3>
+            <ul class="received-invitations-list">
+                {% for invitation in received_invitations %}
+                    <li class="received-invitation-item">
+                        <p>{{ invitation.inviting_student.user.username }} invited you to join the team for the battle "{{ invitation.battle.name }}"</p>
+                        <form method="post" action="{% url 'tournament_status_page_student'  tournament.id %}" class="invitation-response-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
+                            <input type="hidden" name="action_type" value="invitation_response">
+                            <button type="submit" name="response" value="accept" class="accept-btn">Accept</button>
+                            <button type="submit" name="response" value="decline" class="decline-btn">Decline</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <a href="{% url 'student_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

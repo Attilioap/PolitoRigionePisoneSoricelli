@@ -1,0 +1,16 @@
+User	fullName: String, email: String, username: String, password: String, role: boolean
+Notification	date: Date, message: String, type:String
+Score	id: int, fullAssessment: int
+Manual Evaluation	Object	id: int, partialScore: int
+Student	extends User
+Educator extends User
+Tournament	id:int, name: String, registrationDeadline: Date, endingDate: Date, description: String
+AutomaticEvaluation	id: int, partialScore: int
+AutomaticEvaluation Tool	id: int
+Student Tournament Leaderboard	id: int
+TeamBattleleaderboard	id: int
+CodeKata	id: int, description: String
+TestCase	id: int, expectedOutput: String, passed: bool
+Software Project    id: int, buildAutomationScripts: String, staticAnalysisConfig: String
+Team id: int, name: String, numTeammates: int
+Battle id: int, name: String, maxStudentsForTeam: int, registrationDeadline: Date, submissionDeadline: Date

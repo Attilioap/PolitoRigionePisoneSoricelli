@@ -1,0 +1,99 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.signup-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.signup-form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.toggle-educator {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    width: 50px;
+    height: 25px;
+    background-color: #2196F3;
+    border-radius: 15px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #4CAF50;
+}
+
+.toggle-label::before {
+    content: '';
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.3s;
+}
+
+.toggle-checkbox:checked + .toggle-label::before {
+    transform: translateX(25px);
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}

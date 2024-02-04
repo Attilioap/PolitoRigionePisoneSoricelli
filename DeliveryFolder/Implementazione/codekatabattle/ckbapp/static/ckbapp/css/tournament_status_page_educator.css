@@ -1,0 +1,146 @@
+
+body, h1, h2, h3, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-container {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+}
+
+.tournament-title {
+    font-size: 28px;
+    margin: 0;
+}
+
+.content-container {
+    padding: 20px;
+}
+
+.section-title {
+    color: #333;
+}
+
+.battles-section,
+.ended-battles-section,
+.leaderboard-section {
+    margin-bottom: 20px;
+}
+
+.battles-list,
+.ended-battles-list {
+    list-style: none;
+    padding: 0;
+}
+
+.battle-item,
+.ended-battle-item {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.battle-item:hover,
+.ended-battle-item:hover {
+    transform: translateY(-5px);
+}
+
+.view-battle-status,
+.evaluate-btn {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.view-battle-status:hover,
+.evaluate-btn:hover {
+    background-color: #2a6d99;
+}
+
+.leaderboard-section {
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboard-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.leaderboard-item:hover {
+    transform: translateY(-5px);
+}
+
+.leaderboard-item span {
+    font-weight: bold;
+    color: #3498db;
+}
+
+.form-container {
+    margin-top: 15px;
+}
+
+.close-tournament-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.close-tournament-btn:hover {
+    background-color: #c0392b;
+}
+
+
+.back-to-dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-dashboard-link:hover {
+    background-color: #0056b3;
+}
+
+.separator {
+    margin: 20px 0;
+    border-top: 1px solid #dddddd;
+}

@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKataBattle - Student Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/student_dashboard.css' %}">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h2>Welcome, {{ request.user.username }}!</h2>
+
+    <h3>Enrolled Tournaments</h3>
+    <div class="tournament-list">
+        {% for tournament in enrolled_tournaments %}
+            <div class="tournament-item">
+                <div class="tournament-details">
+                    <div class="tournament-name">{{ tournament.name }}</div>
+                    <div class="tournament-status">Status: Enrolled</div>
+                </div>
+                <a href="{% url 'tournament_status_page_student' tournament.id %}" class="view-status-button">View Tournament Status</a>
+                
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="separator"></div>
+
+    <h3>Upcoming Tournaments</h3>
+    <div class="tournament-list">
+        {% for tournament in upcoming_tournaments %}
+            <div class="tournament-item">
+                <div class="tournament-details">
+                    <div class="tournament-name">{{ tournament.name }}</div>
+                    <div class="tournament-status">Status: Upcoming</div>
+                </div>
+                <form method="post" action="{% url 'student_dash' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="enroll_tournament_id" value="{{ tournament.id }}">
+                    <button type="submit" class="enroll-button">Enroll in Tournament</button>
+                </form>
+                <a href="{% url 'tournament_info' tournament.id %}" class="view-info-link">View Tournament Information</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3>Past Tournaments</h3>
+    <div class="tournament-list">
+        {% for tournament in past_tournaments %}
+            <div class="tournament-item">
+                <div class="tournament-details">
+                    <div class="tournament-name">{{ tournament.name }}</div>
+                    <div class="tournament-status">Status: Upcoming</div>
+                </div>
+                <a href="{% url 'tournament_info' tournament.id %}" class="view-info-link">View Tournament Information</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="logout-button">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

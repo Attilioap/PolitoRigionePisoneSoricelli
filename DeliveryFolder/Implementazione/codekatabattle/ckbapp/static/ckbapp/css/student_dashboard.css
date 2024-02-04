@@ -1,0 +1,115 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+}
+
+.dashboard-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.tournament-list {
+    display: grid;
+    gap: 20px;
+}
+
+.tournament-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tournament-item:hover {
+    transform: scale(1.02);
+}
+
+.tournament-details {
+    flex-grow: 1;
+    margin-right: 15px;
+}
+
+.tournament-name {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.tournament-status {
+    color: #28a745;
+}
+
+.separator {
+    margin: 20px 0;
+    border-top: 2px solid #ccc;
+}
+
+.enroll-button,
+.view-status-button,
+.view-info-link {
+    padding: 10px 20px;
+    margin-top: 10px; 
+    margin-right: 10px; 
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.enroll-button:hover,
+.view-status-button:hover,
+.view-info-link:hover {
+    background-color: #0056b3;
+}
+
+.logout-button {
+    margin-top: 20px;
+}
+
+.logout-button form {
+    display: inline-block;
+}
+
+.logout-button button {
+    background-color: #dc3545; 
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+.back-to-dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-dashboard-link:hover {
+    background-color: #0056b3;
+}

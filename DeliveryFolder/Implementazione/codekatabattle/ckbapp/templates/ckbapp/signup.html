@@ -1,0 +1,77 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKataBattle - Sign-up to the platform</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/signup.css' %}">
+</head>
+
+{% block content %}
+<div class="signup-container">
+    <h2>Sign Up for CodeKataBattle</h2>
+    <p id="signup-message">Join our platform to improve your software development skills.</p>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    
+    <form class="signup-form" action="{% url 'signup' %}" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="username" id="username" name="username" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="password1">Password:</label>
+            <input type="password" id="password1" name="password1" required>
+        </div>
+        
+        <label for="is_educator">I'm an educator:</label>
+        <div class="toggle-educator">
+            <label for="is_educator">Educator</label>
+            <input type="checkbox" id="is_educator" name="is_educator" class="toggle-checkbox" onclick="toggleSignupMessage()">
+            <label class="toggle-label" for="is_educator"></label>
+        </div>
+    
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        
+        <div class="form-group">
+            <button type="submit">Sign Up</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // JavaScript code for toggle switch
+    const toggleSwitch = document.getElementById('is_educator');
+
+    toggleSwitch.addEventListener('change', () => {
+        const signupMessage = document.getElementById('signup-message');
+        signupMessage.innerText = toggleSwitch.checked ? "Join our platform to create coding challenges for your students." : "Join our platform to improve your software development skills.";
+    });
+</script>
+
+{% endblock %}

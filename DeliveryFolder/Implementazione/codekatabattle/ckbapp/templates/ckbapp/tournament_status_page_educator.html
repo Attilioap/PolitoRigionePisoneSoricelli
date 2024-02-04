@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKataBattle - Tournament Status Page</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/ckbapp/css/tournament_status_page_educator.css' %}">
+</head>
+<body class="page-container">
+
+    <div class="header-container">
+        <h2 class="tournament-title">Tournament: {{ tournament.name }}</h2>
+    </div>
+
+    <div class="content-container">
+        <div class="separator"></div>
+        {% if show_parameters %}
+        <section class="battles-section">
+            <h3 class="section-title">Ongoing Battles</h3>
+            <ul class="battles-list">
+                {% for battle in ongoing_battles %}
+                    <li class="battle-item">
+                        {{ battle.name }}
+                        <a href="{% url 'battle_status_page' battle.id %}" class="view-battle-status">Visualize Battle Status</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        <div class="separator"></div>
+        <!-- Inside the ended battles section -->
+        <section class="ended-battles-section">
+            <h3 class="section-title">Ended Battles</h3>
+            <ul class="ended-battles-list">
+                {% for battle in ended_battles %}
+                    <li class="ended-battle-item">
+                        {{ battle.name }}
+                        <form method="post" action="{% url 'battle_status_page' battle.id %}" class="form-container">
+                            {% csrf_token %}
+                            <button type="submit" name="evaluate_students_work" class="evaluate-btn">Evaluate Students' Work</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <div class="separator"></div>
+        <!-- Inside the leaderboard-section -->
+        <section class="leaderboard-section">
+            <h3 class="section-title">Tournament Leaderboard</h3>
+            <!-- Display tournament leaderboard information -->
+            <ul class="leaderboard-list">
+                {% for entry in tournament_leaderboard %}
+                    <li class="leaderboard-item">
+                        Student: {{ entry.student.user.username }} | Score: {{ entry.score }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+        {% if show_parameters %}
+        <div class="separator"></div>
+        <form method="post" action="{% url 'tournament_status_page_educator' tournament.id %}" class="form-container">
+            {% csrf_token %}
+            <button type="submit" name="close_tournament" class="close-tournament-btn">Close Tournament</button>
+        </form>
+        {% endif %}
+        <a href="{% url 'educator_dash' %}" class="back-to-dashboard-link">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+
+body, h1, h2, h3, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-container {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+}
+
+.tournament-title {
+    font-size: 28px;
+    margin: 0;
+}
+
+.content-container {
+    padding: 20px;
+}
+
+.section-title {
+    color: #333;
+}
+
+.battles-list {
+    list-style: none;
+    padding: 0;
+}
+
+.battle-item {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.battle-item:hover {
+    transform: translateY(-5px);
+}
+
+.check-status-btn,
+.join-battle-btn {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.check-status-btn:hover,
+.join-battle-btn:hover {
+    background-color: #2a6d99;
+}
+
+.registration-deadline {
+    display: block;
+    margin-top: 8px;
+    color: #777;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboard-item {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.leaderboard-item:hover {
+    transform: translateY(-5px);
+}
+#messages {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.received-invitations-section {
+    margin-bottom: 20px;
+}
+
+.received-invitations-list {
+    list-style: none;
+    padding: 0;
+}
+
+.received-invitation-item {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.received-invitation-item:hover {
+    transform: translateY(-5px);
+}
+
+.invitation-response-form {
+    display: inline-block;
+}
+
+.accept-btn,
+.decline-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-right: 8px;
+}
+
+.decline-btn {
+    background-color: #dc3545;
+}
+
+.accept-btn:hover,
+.decline-btn:hover {
+    background-color: #45a049;
+}
+
+
+.back-to-dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-dashboard-link:hover {
+    background-color: #0056b3;
+}
+
+.separator {
+    margin: 20px 0;
+    border-top: 1px solid #dddddd;
+}
